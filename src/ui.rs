@@ -82,7 +82,7 @@ fn setup_menu(mut commands: Commands) {
 
     commands.entity(root).with_children(|parent| {
         parent.spawn((
-            Text::new("Tres en Raya 3D"),
+            Text::new("3D Tic-Tac-Toe"),
             TextFont {
                 font_size: FontSize::Px(58.0),
                 ..default()
@@ -90,7 +90,7 @@ fn setup_menu(mut commands: Commands) {
             TextColor(Color::srgb(0.95, 0.82, 0.45)),
         ));
         parent.spawn((
-            Text::new("Alinea 3 fichas en cualquier eje o diagonal del cubo 3x3x3."),
+            Text::new("Line up 3 pieces along any axis or diagonal of the 3x3x3 cube."),
             TextFont {
                 font_size: FontSize::Px(18.0),
                 ..default()
@@ -98,19 +98,19 @@ fn setup_menu(mut commands: Commands) {
             TextColor(Color::srgb(0.82, 0.84, 0.9)),
         ));
         parent.spawn((
-            Text::new("Tu eres X (rojo) - la computadora es O (azul)"),
+            Text::new("You are X (red) - the computer is O (blue)"),
             TextFont {
                 font_size: FontSize::Px(16.0),
                 ..default()
             },
             TextColor(Color::srgb(0.7, 0.72, 0.8)),
         ));
-        parent.spawn(menu_button("Empiezo yo", MenuAction::StartHuman));
-        parent.spawn(menu_button("Empieza la computadora", MenuAction::StartAi));
+        parent.spawn(menu_button("I go first", MenuAction::StartHuman));
+        parent.spawn(menu_button("Computer goes first", MenuAction::StartAi));
         parent.spawn(difficulty_button());
         parent.spawn((
             Text::new(
-                "Arrastra con el boton izquierdo para girar el tablero - rueda para acercar",
+                "Drag with the left button to rotate the board - scroll wheel to zoom",
             ),
             TextFont {
                 font_size: FontSize::Px(14.0),
@@ -164,7 +164,7 @@ fn difficulty_button() -> impl Bundle {
         BackgroundColor(MENU_BUTTON),
         children![(
             DifficultyLabel,
-            Text::new("Dificultad: Medio"),
+            Text::new("Difficulty: Medium"),
             TextFont {
                 font_size: FontSize::Px(24.0),
                 ..default()
@@ -196,7 +196,7 @@ fn menu_system(
                     MenuAction::CycleDifficulty => {
                         selection.difficulty = selection.difficulty.next();
                         for mut text in &mut labels {
-                            **text = format!("Dificultad: {}", selection.difficulty.label());
+                            **text = format!("Difficulty: {}", selection.difficulty.label());
                         }
                     }
                 }
@@ -256,7 +256,7 @@ fn setup_hud(mut commands: Commands) {
             TextColor(Color::WHITE),
         ));
         parent.spawn((
-            Text::new("Clic para colocar - arrastra para girar - rueda para zoom"),
+            Text::new("Click to place - drag to rotate - scroll wheel to zoom"),
             TextFont {
                 font_size: FontSize::Px(14.0),
                 ..default()
@@ -272,18 +272,18 @@ fn update_hud(
     mut query: Query<&mut Text, With<HudStatusText>>,
 ) {
     let message = if falling.0 > 0 {
-        format!("Colocando {}...", game.turn.name())
+        format!("Placing {}...", game.turn.name())
     } else {
         match game.outcome {
-            Some(Outcome::Win(player)) if player == game.ai => "Gano la computadora".to_string(),
-            Some(Outcome::Win(_)) => "Ganaste!".to_string(),
-            Some(Outcome::Draw) => "Empate!".to_string(),
+            Some(Outcome::Win(player)) if player == game.ai => "Computer wins".to_string(),
+            Some(Outcome::Win(_)) => "You win!".to_string(),
+            Some(Outcome::Draw) => "Draw!".to_string(),
             None => match game.phase {
-                Phase::AiTurn => "Turno de la computadora...".to_string(),
+                Phase::AiTurn => "Computer's turn...".to_string(),
                 _ if game.board.moves == 0 => {
-                    "Tu turno (X). No puedes empezar en el centro.".to_string()
+                    "Your turn (X). You can't start in the center.".to_string()
                 }
-                _ => "Tu turno (X)".to_string(),
+                _ => "Your turn (X)".to_string(),
             },
         }
     };
@@ -309,9 +309,9 @@ fn check_game_over(
 
 fn setup_game_over(mut commands: Commands, game: Res<Game>) {
     let title = match game.outcome {
-        Some(Outcome::Win(player)) if player == game.human => "Ganaste!",
-        Some(Outcome::Win(_)) => "Gano la computadora",
-        Some(Outcome::Draw) => "Empate",
+        Some(Outcome::Win(player)) if player == game.human => "You win!",
+        Some(Outcome::Win(_)) => "Computer wins",
+        Some(Outcome::Draw) => "Draw",
         None => "",
     };
 
@@ -361,7 +361,7 @@ fn game_over_button() -> impl Bundle {
         BorderColor::all(Color::srgb(0.55, 0.45, 0.25)),
         BackgroundColor(MENU_BUTTON),
         children![(
-            Text::new("Volver al menu"),
+            Text::new("Back to menu"),
             TextFont {
                 font_size: FontSize::Px(22.0),
                 ..default()

@@ -2,7 +2,7 @@
 name = "tres_en_raya_3d"
 version = "0.1.0"
 edition = "2021"
-description = "Tres en raya tridimensional (3x3x3 con gravedad) en Rust + Bevy"
+description = "3D tic-tac-toe (3x3x3 with gravity) in Rust + Bevy"
 
 [dependencies]
 bevy = "0.19"

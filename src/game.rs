@@ -23,9 +23,9 @@ impl Difficulty {
 
     pub fn label(self) -> &'static str {
         match self {
-            Difficulty::Easy => "Facil",
-            Difficulty::Medium => "Medio",
-            Difficulty::Hard => "Dificil",
+            Difficulty::Easy => "Easy",
+            Difficulty::Medium => "Medium",
+            Difficulty::Hard => "Hard",
         }
     }
 }

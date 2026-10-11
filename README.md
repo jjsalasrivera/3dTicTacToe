@@ -1,62 +1,63 @@
-# Tres en Raya 3D
+# 3D Tic-Tac-Toe
 
 ![Rust](https://img.shields.io/badge/Rust-1.95%2B-orange?logo=rust)
 ![Bevy](https://img.shields.io/badge/Bevy-0.19-blue)
 ![License](https://img.shields.io/badge/license-GPL--3.0-blue)
 
-Juego de **tres en raya tridimensional** (rejilla **3×3×3 con gravedad**) sobre una
-mesa de madera con nueve varillas, escrito en **Rust** con el motor **Bevy**.
+A **three-dimensional tic-tac-toe** game (a **3×3×3 grid with gravity**) on a wooden
+table with nine rods, written in **Rust** with the **Bevy** engine.
 
-Las fichas caen por gravedad y se apilan en las columnas. Gana quien alinee **tres
-fichas** en cualquiera de las **49 líneas** del cubo (ejes, diagonales de cara y
-diagonales espaciales).
+Pieces fall under gravity and stack inside the columns. You win by lining up
+**three pieces** along any of the **49 lines** of the cube (axes, face diagonals and
+space diagonals).
 
 ---
 
-## 🎮 Cómo se juega
+## 🎮 How to play
 
-- El tablero es un cubo de **3×3×3 = 27 celdas**.
-- El eje **Z es vertical** (gravedad): al jugar en una columna `(x, y)`, la ficha cae
-  al **primer nivel libre** (0, 1 o 2) y se apila sobre las anteriores.
-- Se gana alineando **3 fichas** en cualquiera de las **49 líneas** del cubo
-  (ejes, diagonales de cara y diagonales espaciales como `(0,0,0) – (1,1,1) – (2,2,2)`).
-- La **primera jugada no puede ir al centro** de la base `(1,1,0)`.
-- En el menú eliges si empiezas **tú** o la **computadora**, y la **dificultad**.
+- The board is a **3×3×3 = 27 cell** cube.
+- The **Z axis is vertical** (gravity): when you play a column `(x, y)`, the piece
+  falls to the **lowest free level** (0, 1 or 2) and stacks on top of the others.
+- You win by lining up **3 pieces** along any of the **49 lines** of the cube
+  (axes, face diagonals and space diagonals such as `(0,0,0) – (1,1,1) – (2,2,2)`).
+- The **first move cannot be the center** of the base `(1,1,0)`.
+- In the menu you choose whether **you** or the **computer** go first, and the
+  **difficulty**.
 
-### Controles
+### Controls
 
-| Acción | Control |
+| Action | Control |
 |---|---|
-| Rotar el tablero | Arrastrar con el **botón izquierdo** |
-| Acercar / alejar | **Rueda del ratón** |
-| Colocar una ficha | **Clic izquierdo** en la columna bajo el cursor |
+| Rotate the board | **Left-drag** |
+| Zoom in / out | **Scroll wheel** |
+| Place a piece | **Left-click** the column under the cursor |
 
-La columna bajo el cursor se resalta cuando es jugable.
+The column under the cursor is highlighted when it is playable.
 
-### Fichas
+### Pieces
 
-| Jugador | Ficha | Color |
+| Player | Piece | Color |
 |---|---|---|
-| Tú | **X** (dos barras cruzadas en 3D) | Rojo |
-| Computadora | **O** (anillo circular en 3D) | Azul |
+| You | **X** (two crossed 3D bars) | Red |
+| Computer | **O** (3D ring) | Blue |
 
 ---
 
-## 🚀 Ejecutar
+## 🚀 Running
 
-Requisitos: un toolchain de Rust reciente. **Bevy 0.19 exige rustc ≥ 1.95**:
+Requirements: a recent Rust toolchain. **Bevy 0.19 requires rustc ≥ 1.95**:
 
 ```bash
 rustup update stable
 ```
 
-Compilar y jugar (se recomienda modo *release* por rendimiento):
+Build and play (*release* mode is recommended for performance):
 
 ```bash
 cargo run --release
 ```
 
-Durante el desarrollo:
+During development:
 
 ```bash
 cargo run
@@ -68,45 +69,45 @@ cargo run
 cargo test
 ```
 
-Cubren: las 49 líneas, la gravedad y el límite de altura por columna, la
-restricción del centro, el deshacer jugadas (`pop`) y el comportamiento básico de
-la IA (jugada legal y bloqueo de amenazas).
+They cover: the 49 winning lines, gravity and the per-column height limit, the
+center restriction, undoing moves (`pop`) and the basic AI behaviour (legal move
+and threat blocking).
 
 ---
 
-## 🧠 La IA
+## 🧠 The AI
 
-- **Negamax con poda alfa-beta**.
-- **Tabla de transposición** con *hashing* **Zobrist**.
-- **Ordenación de jugadas** (centro → esquinas → bordes) y **profundización
-  iterativa** con presupuesto de nodos (algoritmo *anytime*).
-- Evaluación heurística sobre las 49 líneas (líneas muertas y amenazas de 2).
-- Dificultades: **Fácil** (con algo de azar), **Medio** y **Difícil**.
+- **Negamax with alpha-beta pruning**.
+- **Transposition table** with **Zobrist hashing**.
+- **Move ordering** (center → corners → edges) and **iterative deepening** with a
+  node budget (an *anytime* algorithm).
+- Heuristic evaluation over the 49 lines (dead lines and 2-piece threats).
+- Difficulties: **Easy** (partly random), **Medium** and **Hard**.
 
-El modelo del tablero usa **bitboards de 27 bits** (`bit = columna * 3 + nivel`), de
-modo que comprobar una victoria es una operación de bits contra 49 máscaras.
+The board model uses **27-bit bitboards** (`bit = column * 3 + level`), so checking
+for a win is a bitwise operation against 49 precomputed masks.
 
 ---
 
-## 🗂️ Estructura
+## 🗂️ Project structure
 
-| Archivo | Responsabilidad |
+| File | Responsibility |
 |---|---|
-| `src/main.rs` | Arranque, ventana, estados y registro de plugins |
-| `src/config.rs` | Constantes y conversión entre coordenadas del juego y del mundo |
-| `src/board.rs` | Tablero, reglas, bitboards y las 49 líneas ganadoras |
-| `src/game.rs` | Recurso de partida: turno, fase, dificultad y resultado |
-| `src/ai.rs` | Negamax + alfa-beta, transposición Zobrist y profundización iterativa |
-| `src/render.rs` | Mesa de madera, varillas, luces y línea ganadora |
-| `src/pieces.rs` | Meshes/materiales de las fichas y animación de caída |
-| `src/camera.rs` | Cámara orbital ([`bevy_panorbit_camera`](https://github.com/Plonq/bevy_panorbit_camera)) |
-| `src/input.rs` | Raycast del ratón, resaltado de columna y colocación |
-| `src/ui.rs` | Menú, HUD y pantalla de fin de partida |
-| `src/state.rs` | Estados (`Menu`, `Playing`, `GameOver`) |
+| `src/main.rs` | Startup, window, states and plugin registration |
+| `src/config.rs` | Constants and conversion between game and world coordinates |
+| `src/board.rs` | Board, rules, bitboards and the 49 winning lines |
+| `src/game.rs` | Match resource: turn, phase, difficulty and outcome |
+| `src/ai.rs` | Negamax + alpha-beta, Zobrist transposition and iterative deepening |
+| `src/render.rs` | Wooden table, rods, lights and the winning line |
+| `src/pieces.rs` | Piece meshes/materials and fall animation |
+| `src/camera.rs` | Orbital camera ([`bevy_panorbit_camera`](https://github.com/Plonq/bevy_panorbit_camera)) |
+| `src/input.rs` | Mouse raycast, column highlight and placement |
+| `src/ui.rs` | Menu, HUD and game-over screen |
+| `src/state.rs` | States (`Menu`, `Playing`, `GameOver`) |
 
 ---
 
-## 📄 Licencia
+## 📄 License
 
-Este proyecto se distribuye bajo la **GNU General Public License v3.0**. Consulta
-el archivo [`LICENSE`](LICENSE) para más detalles.
+This project is distributed under the **GNU General Public License v3.0**. See the
+[`LICENSE`](LICENSE) file for details.

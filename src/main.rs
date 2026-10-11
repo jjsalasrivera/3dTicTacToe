@@ -20,7 +20,7 @@ fn main() {
     App::new()
         .add_plugins(DefaultPlugins.set(WindowPlugin {
             primary_window: Some(Window {
-                title: "Tres en Raya 3D".to_string(),
+                title: "3D Tic-Tac-Toe".to_string(),
                 resolution: (1100u32, 800u32).into(),
                 present_mode: PresentMode::AutoVsync,
                 ..default()
